@@ -47,9 +47,15 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.google',
 
-    # Apps
+    # Autenticação via API
     'rest_framework',
+    'dj_rest_auth',
+    'dj_rest_auth.registration',  # Se quiser endpoints de registro
+    'rest_framework.authtoken',
+
+    # Apps
     'core',
+    'agenda',
 ]
 
 MIDDLEWARE = [
@@ -155,8 +161,19 @@ AUTHENTICATION_BACKENDS = (
 ACCOUNT_AUTHENTICATION_METHOD = 'email'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_EMAIL_VERIFICATION = 'optional'  # ou 'mandatory'
+ACCOUNT_USER_MODEL_USERNAME_FIELD = None  # Como estamos usando um modelo customizado sem username
+ACCOUNT_EMAIL_VERIFICATION = 'optional'  # Pode ser 'mandatory' se quiser forçar a verificação do e-mail
 
+REST_FRAMEWORK = {
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',  # Por padrão, exige autenticação
+    ],
+    'DEFAULT_AUTHENTICATION_CLASSES': (
+        'rest_framework_simplejwt.authentication.JWTAuthentication',  # Autenticação via JWT
+        'rest_framework.authentication.SessionAuthentication',          # Mantém a opção de sessão para desenvolvimento, se necessário
+    ),
+}
+
+REST_USE_JWT = True
 
 
